@@ -1,6 +1,6 @@
 import { buildServer } from './server.js';
 
-const { app, config } = buildServer();
+const { app, config } = await buildServer();
 
 app.listen({ port: config.port, host: '0.0.0.0' }, (err, address) => {
   if (err) {

@@ -1,12 +1,16 @@
 import Fastify from 'fastify';
 import { loadConfig } from './config.js';
+import { authMiddleware } from '@urule/auth-middleware';
 import { MockProvider } from './providers/mock-provider.js';
 import { SessionManager } from './services/session-manager.js';
 import { sessionsRoutes } from './routes/sessions.routes.js';
 
-export function buildServer() {
+export async function buildServer() {
   const config = loadConfig();
   const app = Fastify({ logger: true });
+
+  // Auth middleware
+  await app.register(authMiddleware, { publicRoutes: ['/healthz'] });
 
   const sessionManager = new SessionManager();
   sessionManager.registerProvider(new MockProvider());
