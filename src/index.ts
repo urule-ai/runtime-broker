@@ -1,5 +1,8 @@
+import { loadConfig, validateConfig } from './config.js';
 import { buildServer } from './server.js';
 
+const preConfig = loadConfig();
+validateConfig(preConfig);
 const { app, config } = await buildServer();
 
 app.listen({ port: config.port, host: '0.0.0.0' }, (err, address) => {
