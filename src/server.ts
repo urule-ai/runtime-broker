@@ -1,5 +1,7 @@
 import Fastify from 'fastify';
 import rateLimit from '@fastify/rate-limit';
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 import { loadConfig } from './config.js';
 import { authMiddleware } from '@urule/auth-middleware';
 import { MockProvider } from './providers/mock-provider.js';
@@ -32,7 +34,24 @@ export async function buildServer() {
   });
 
   // Auth middleware
-  await app.register(authMiddleware, { publicRoutes: ['/healthz'] });
+  await app.register(authMiddleware, { publicRoutes: ['/healthz', '/docs'] });
+
+  // OpenAPI documentation
+  await app.register(swagger, {
+    openapi: {
+      info: {
+        title: 'Urule Runtime Broker API',
+        description: 'Sandbox session allocation broker',
+        version: '0.1.0',
+      },
+      servers: [{ url: 'http://localhost:4500' }],
+      tags: [{ name: 'sessions' }, { name: 'runtimes' }],
+    },
+  });
+
+  await app.register(swaggerUi, {
+    routePrefix: '/docs',
+  });
 
   const sessionManager = new SessionManager();
   sessionManager.registerProvider(new MockProvider());
