@@ -2,7 +2,7 @@
 
 Sandbox session allocation broker for managing isolated execution environments.
 
-Part of the [Urule](https://github.com/urule-os/urule) ecosystem — the open-source coordination layer for AI agents.
+Part of the [Urule](https://github.com/urule-ai/urule) ecosystem — the open-source coordination layer for AI agents.
 
 ## Features
 
