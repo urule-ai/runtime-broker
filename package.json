@@ -14,7 +14,7 @@
     "@fastify/rate-limit": "^10.3.0",
     "@fastify/swagger": "^9.7.0",
     "@fastify/swagger-ui": "^5.2.5",
-    "@urule/auth-middleware": "file:../urule-auth-middleware",
+    "@urule/auth-middleware": "file:../urule/packages/auth-middleware",
     "fastify": "^5.3.3",
     "nats": "^2.29.3",
     "ulid": "^2.3.0",
