@@ -1,5 +1,12 @@
-import { loadConfig, validateConfig } from './config.js';
-import { buildServer } from './server.js';
+// initOtel must run BEFORE Fastify is loaded so auto-instrumentation can hook
+// it at module-load time. Static imports are hoisted; we keep only the OTel
+// helper imported statically here and dynamically import everything else.
+import { initOtel } from '@urule/observability';
+
+const otelSdk = initOtel('runtime-broker');
+
+const { loadConfig, validateConfig } = await import('./config.js');
+const { buildServer } = await import('./server.js');
 
 const preConfig = loadConfig();
 validateConfig(preConfig);
@@ -13,10 +20,10 @@ app.listen({ port: config.port, host: '0.0.0.0' }, (err, address) => {
   app.log.info(`urule-runtime-broker listening on ${address}`);
 });
 
-// Graceful shutdown
 const shutdown = async () => {
   app.log.info('Shutting down...');
   await app.close();
+  if (otelSdk) await otelSdk.shutdown();
   process.exit(0);
 };
 process.on('SIGTERM', shutdown);
